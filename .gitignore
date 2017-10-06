@@ -1,2 +1,3 @@
 .*ipynb_checkpoints
 higgs-data/test.csv
+*__pycache__
