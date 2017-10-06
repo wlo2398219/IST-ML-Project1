@@ -12,9 +12,9 @@
 
 ## Getting Started
 1. Clone this repository
-2. Get "test.csv" [file] (https://www.kaggle.com/c/epfml-higgs/data)
-3. Move/copy the file into "data/"
-4. Ensure the name of parent directory is IST_ML_Project1
+2. Get "test.csv" [file](https://www.kaggle.com/c/epfml-higgs/data)
+3. Move/copy the file into "higgs-data/"
+
 
 ## Required Softwares
 1. Install [Anaconda](https://www.continuum.io/downloads)
