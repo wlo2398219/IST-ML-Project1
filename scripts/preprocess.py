@@ -23,6 +23,52 @@ def standardize(x, with_ones = False):
 
 	return stand_x
 
+def standardize_wo_handling_missing(x, power, with_ones = False):
+	# mask = (x != -999)
+	mean = x.sum(axis = 0)/x.shape[0]
+	std_dev = np.sqrt(((x - mean) ** 2).sum(axis = 0)/x.shape[0])
+	stand_x = (x - mean)/std_dev
+
+	x_tmp = x
+	for deg in range(2, power + 1):
+		x_tmp = x_tmp * x
+		x_sq = x_tmp
+
+		mean = x_sq.sum(axis = 0)/x_sq.shape[0]
+		std_dev = np.sqrt(((x_sq - mean) ** 2).sum(axis = 0)/x_sq.shape[0])
+		x_sq = (x_sq - mean)/std_dev
+
+		stand_x = np.concatenate((stand_x,x_sq),axis = 1)
+
+	# ---------- Add ones to the matrix --------
+	if with_ones:
+		tmp = np.ones([stand_x.shape[0], stand_x.shape[1] + 1])
+		tmp[:,1:] = stand_x
+		stand_x = tmp
+
+	return stand_x
+
+def standardize_with_median(x, with_ones = False):
+	mask = (x != -999)
+
+	# compute the mean and standard deviations
+	mean = (x * mask).sum(axis=0)/np.sum(mask, axis=0)
+	std_dev = np.sqrt((((x - mean) * mask)**2).sum(axis=0)/np.sum(mask, axis=0))
+	# print(std_dev)
+	# ------- standarization finish ------------
+	stand_x = (x * mask - mean)/std_dev
+
+	# --------- Setting -999 to 0 --------------
+	stand_x[~mask] = 0
+
+	# ---------- Add ones to the matrix --------
+	if with_ones:
+		tmp = np.ones([stand_x.shape[0], stand_x.shape[1] + 1])
+		tmp[:,1:] = stand_x
+		stand_x = tmp
+
+	return stand_x
+
 def getPCA(x, num):
     pca = PCA(n_components = num)
     x = pca.fit_transform(x)

@@ -109,7 +109,7 @@ def sigmoid(t):
 def compute_loss_logistic(y, tx, w):
     """compute the cost by negative log likelihood."""
     pred = sigmoid(tx.dot(w))
-    loss = ((y + 1)/2).T.dot(np.log(pred)) + ((1 - y)/2).T.dot(np.log(1 - pred))
+    loss = ((y + 1)/2).T.dot(np.log(pred+0.0001)) + ((1 - y)/2).T.dot(np.log(1 - (pred-0.0001)))
     return np.squeeze(- loss)
 
 def compute_gradient_logistic(y, tx, w):
