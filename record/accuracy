@@ -92,6 +92,39 @@ stdev te:  0.000894570287904
 mean tr:  0.782433
 stdev tr:  0.000375374479687
 
+feature: np.delete(x, [11, 15, 16, 18, 19, 20, 25, 26, 28],1)
+make [3, 5, 8, 9, 13, 16, 23, 26] as log scale (additional log term)
+missing value: replace with 0
+ml_method: linear logistic regression without regularization
+mean te:  0.762068
+stdev te:  0.000469314393557
+mean tr:  0.762387
+stdev tr:  0.000200189909836
+
+feature: 
+1. delete phi
+2. log scale, power-2 term
+3. add additional term to specify missing values
+missing value: replace with 0
+ml_method: linear logistic regression without regularization
+mean te:  0.797952
+stdev te:  0.000365425779058
+mean tr:  0.798073
+stdev tr:  0.000101074230148
+
+feature: 
+1. delete phi
+2. log scale, power-2 term
+3. add 0 to specify missing values
+4. with 1/(1+logx) terms
+missing value: replace with 0
+ml_method: linear logistic regression without regularization
+mean te:  0.800852
+stdev te:  0.000601943518945
+mean tr:  0.800846
+stdev tr:  9.99699954986e-05
+
+
 --------- power  2  ---------
 mean te:  0.786832
 stdev te:  0.00171830614269

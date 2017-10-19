@@ -91,9 +91,8 @@ def least_squares(y, tx):
 def ridge_regression(y, tx, lambda_):
 	xt = tx.transpose()
 	weights = np.linalg.solve(xt.dot(tx) + lambda_ * (2 * y.shape[0]) * np.identity(xt.shape[0]), xt.dot(y))
-	loss = compute_rmse(y, tx, w)
 
-	return loss, weights
+	return weights
 
 # def sigmoid(tx, w):
 # 	z = np.exp(-tx.dot(w))
@@ -103,29 +102,35 @@ def ridge_regression(y, tx, lambda_):
 #     return tx.T.dot(sigmoid(tx, w) - y)
 
 def sigmoid(t):
-    """apply sigmoid function on t."""
-    return 1.0 / (1 + np.exp(-t))
+	"""apply sigmoid function on t."""
+	return 1.0 / (1 + np.exp(-t))
 
 def compute_loss_logistic(y, tx, w):
-    """compute the cost by negative log likelihood."""
-    pred = sigmoid(tx.dot(w))
-    loss = ((y + 1)/2).T.dot(np.log(pred+0.0001)) + ((1 - y)/2).T.dot(np.log(1 - (pred-0.0001)))
-    return np.squeeze(- loss)
+	"""compute the cost by negative log likelihood."""
+	pred = sigmoid(tx.dot(w))
+	loss = ((y + 1)/2).T.dot(np.log(pred+1e-5)) + ((1 - y)/2).T.dot(np.log(1 - (pred-1e-5)))
+	return np.squeeze(- loss)
 
 def compute_gradient_logistic(y, tx, w):
-    """compute the gradient of loss."""
-    pred = sigmoid(tx.dot(w))
-    grad = tx.T.dot(pred - (y+1)/2)
-    return grad
+	"""compute the gradient of loss."""
+	pred = sigmoid(tx.dot(w))
+	grad = tx.T.dot(pred - (y+1)/2)
+	return grad
 
 # Logistic regression using gradient descent or SGD
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
 	w = initial_w
-	
-	for n_iter in range(max_iters):
 
+	loss = compute_loss_logistic(y, tx, w)
+	grad = compute_gradient_logistic(y,tx,w)
+
+	w = w - gamma * grad
+	ws.append(w)
+	losses.append(loss)
+
+	for n_iter in range(max_iters - 1):
 		# need change
 		loss = compute_loss_logistic(y, tx, w)
 		grad = compute_gradient_logistic(y,tx,w)
@@ -133,24 +138,33 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 		w = w - gamma * grad
 		ws.append(w)
 		losses.append(loss)
+
+		# if losses[n_iter] > losses[n_iter - 1]:
+			# small the learning rate
+			# gamma /= 2
+			# print('divide 2:', gamma)
+		# else:
+			# gamma *= 1.1
+			# print('multiply 1.1:', gamma)
+
 		# print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
 			  # bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
 	return losses, np.array(w)
 
 def compute_loss_logistic_regularized(y, tx, w, lambda_):
-    """compute the cost by negative log likelihood."""
-    pred = sigmoid(tx.dot(w))
-    loss = ((y + 1)/2).T.dot(np.log(pred)) + ((1 - y)/2).T.dot(np.log(1 - pred))
-    loss -= y.shape[0] * lambda_ * np.inner(w, w)
-    return np.squeeze(- loss)
+	"""compute the cost by negative log likelihood."""
+	pred = sigmoid(tx.dot(w))
+	loss = ((y + 1)/2).T.dot(np.log(pred+1e-5)) + ((1 - y)/2).T.dot(np.log(1 - (pred-1e-5)))
+	loss -= lambda_ *  np.inner(w, w)
+	return np.squeeze(- loss)
 
 def compute_gradient_logistic_regularized(y, tx, w, lambda_):
-    """compute the gradient of loss."""
-    pred = sigmoid(tx.dot(w))
-    grad = tx.T.dot(pred - (y+1)/2)
-    grad += 2 * y.shape[0] * lambda_ * w
-    return grad
+	"""compute the gradient of loss."""
+	pred = sigmoid(tx.dot(w))
+	grad = tx.T.dot(pred - (y+1)/2)
+	grad += 2 * y.shape[0] * lambda_ * w
+	return grad
 
 # Regularized logistic regression using gradient descent or SGD
 def reg_logistic_regression(y, tx, initial_w, max_iters, gamma, lambda_):

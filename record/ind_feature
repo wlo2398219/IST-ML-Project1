@@ -3,7 +3,7 @@ DER_mass_transverse_met_lep
 DER_mass_vis	
 DER_pt_h	
 DER_deltaeta_jet_jet	
-DER_mass_jet_jet	
+DER_mas_sjet_jet	
 DER_prodeta_jet_jet	
 DER_deltar_tau_lep	
 DER_pt_tot	

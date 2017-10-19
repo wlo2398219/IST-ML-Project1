@@ -1,5 +1,5 @@
 import numpy as np
-from scripts.ml_method import logistic_regression
+from scripts.ml_method import logistic_regression, reg_logistic_regression
 from scripts.proj1_helpers import predict_labels
 
 def build_k_indices(y, k_fold, seed):
@@ -12,7 +12,7 @@ def build_k_indices(y, k_fold, seed):
                  for k in range(k_fold)]
     return np.array(k_indices)
 
-def cross_validation(y, x, k_indices, k):
+def cross_validation(y, x, k_indices, k, max_iter, lambda_):
     
     mask = np.ones(x.shape[0], dtype = bool)
     mask[k_indices[k]] = False
@@ -24,9 +24,10 @@ def cross_validation(y, x, k_indices, k):
 
     # ***************************************************
     
-    losses, w = logistic_regression(y_tr, x_tr , np.zeros(x.shape[1]),300, 0.000005)
-    
+    # losses, w = logistic_regression(y_tr, x_tr , np.zeros(x.shape[1]), max_iter, 0.000005)
+    # losses, w = logistic_regression(y_tr, x_tr , np.zeros(x.shape[1]), max_iter, 0.000005)
+    losses, w = reg_logistic_regression(y_tr, x_tr, np.zeros(x.shape[1]), max_iter, 0.000002, lambda_)
     acc_te = np.mean(predict_labels(w, x_te) == y_te)
     acc_tr = np.mean(predict_labels(w, x_tr) == y_tr)
     
-    return acc_tr, acc_te, w
+    return acc_tr, acc_te, w, losses[max_iter - 1]
