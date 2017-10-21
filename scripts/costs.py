@@ -1,20 +1,32 @@
 import numpy as np
 
-# *******************
-# General Setting
-# y: N x 1 vector
-# tx: N x D matrix
-# w: D x 1 vector
-# *******************
-
 def compute_mse(y, tx, w):
+    """Function to compute mean square error (MSE).
 
-    v_error = y - tx.dot(w)
-    error = np.inner(v_error, v_error)/(2 * y.shape[0]) 
-    return error
+    Args:
+        y  (numpy array): Matrix output of size N x 1.
+        tx (numpy array): Matrix input of size N x D.
+        w  (numpy array): Matrix weight (parameters of the model) of size D x 1.
+
+    Returns:
+        mse (float, scalar) : The mean square error (MSE) for given model w.
+    """
+    
+    value_error = y - tx.dot(w)
+    mse         = np.inner(value_error, value_error)/(2 * y.shape[0]) 
+    return mse
 
 def compute_rmse(y, tx, w):
-    return np.sqrt(2*compute_mse(y, tx, w))
+    """Function to compute root mean square error (RMSE).
 
-# def compute_loss_logistic(y, tx, w):
-#     return np.log(1 + np.exp(tx.dot(w))).sum() - y.T.dot(tx.dot(w))
+    Args:
+        y  (numpy array): Matrix output of size N x 1.
+        tx (numpy array): Matrix input of size N x D.
+        w  (numpy array): Matrix weight (parameters of the model) of size D x 1.
+
+    Returns:
+        rmse (float, scalar) : The root mean square error (RMSE) for given model w.
+    """
+    
+    rmse = np.sqrt(2*compute_mse(y, tx, w))
+    return rmse

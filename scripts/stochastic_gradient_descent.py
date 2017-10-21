@@ -1,5 +1,5 @@
-from helpers import batch_iter
-from costs import compute_loss
+from scripts.helpers import batch_iter
+from scripts.costs import compute_loss
 
 def sigmoid(t):
     """apply sigmoid function on t."""
