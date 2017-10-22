@@ -31,15 +31,34 @@ def compute_rmse(y, tx, w):
 
 
 def compute_loss_logistic(y, tx, w):
-    """compute the cost by negative log likelihood."""
-    pred = sigmoid(tx.dot(w))
-    loss = ((y + 1)/2).T.dot(np.log(pred+1e-5)) + ((1 - y)/2).T.dot(np.log(1 - (pred-1e-5)))
-    return np.squeeze(- loss)
+    """Function to compute cost of logistic regression by negative log likelihood.
+    Args:
+        y  (numpy array): Matrix output of size N x 1.
+        tx (numpy array): Matrix input of size N x D.
+        w  (numpy array): Matrix weight (parameters of the model) of size D x 1.
+    Returns:
+        loss (float, scalar) : The loss/cost value of logistic regression for given model w.
+    """
+
+    y_hat = sigmoid(tx.dot(w))
+    loss  = (np.transpose(y)).dot(np.log(y_hat + 1e-5)) + (np.transpose(1 - y)).dot(np.log(1 - (y_hat - 1e-5)))
+    loss  = np.squeeze(- loss)
+    return loss
 
 
 def compute_loss_logistic_regularized(y, tx, w, lambda_):
-    """compute the cost by negative log likelihood."""
-    pred = sigmoid(tx.dot(w))
-    loss = ((y + 1)/2).T.dot(np.log(pred+1e-5)) + ((1 - y)/2).T.dot(np.log(1 - (pred-1e-5)))
+    """Function to compute cost of regularized logistic regression by negative log likelihood.
+    Args:
+        y       (numpy array): Matrix output of size N x 1.
+        tx      (numpy array): Matrix input of size N x D.
+        w       (numpy array): Matrix weight (parameters of the model) of size D x 1.
+        lambda_ (float)      : Penalty constant.
+    Returns:
+        loss (float, scalar) : The loss/cost value of regularized logistic regression for given model w.
+    """
+    
+    y_hat = sigmoid(tx.dot(w))
+    loss  = (np.transpose(y)).dot(np.log(y_hat + 1e-5)) + (np.transpose(1 - y)).dot(np.log(1 - (y_hat - 1e-5)))
     loss -= lambda_ *  np.inner(w, w)
-    return np.squeeze(- loss)
+    loss  = np.squeeze(- loss)
+    return loss
