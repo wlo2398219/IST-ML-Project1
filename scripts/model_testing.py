@@ -1,8 +1,8 @@
 import numpy as np
 from scripts.proj1_helpers import predict_labels
 from scripts.split_data import split_data
-from scripts.ml_method import reg_logistic_regression
-from scripts.ml_method import logistic_regression
+from scripts.implementations import reg_logistic_regression
+from scripts.implementations import logistic_regression
 
 def curve_lambda(y, stand_x, ratio, init_, step_, lambda_):
     print('lambda, train_error, test_error')

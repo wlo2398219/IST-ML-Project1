@@ -17,8 +17,8 @@ def build_k_indices(y, k_fold, seed):
     interval   = int(num_row / k_fold)
     np.random.seed(seed)
     indices    = np.random.permutation(num_row)
-    k_indices  = np.array[indices[k * interval: (k + 1) * interval]
-                 for k in range(k_fold)]
+    k_indices  = np.array([indices[k * interval: (k + 1) * interval]
+                 for k in range(k_fold)])
     return k_indices
 
 def cross_validation(y, x, k_indices):

@@ -40,10 +40,12 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """
     
     w = initial_w
-    for minibatch_y, minibatch_x in batch_iter(y,tx,32):
-        loss = compute_mse(minibatch_y, minibatch_x, w)
-        grad = compute_gradient_mse(minibatch_y, minibatch_x, w) 
-        w = w - gamma * grad
+    
+    for n_iter in range(max_iters):    
+        for minibatch_y, minibatch_x in batch_iter(y,tx,100):
+            loss = compute_mse(minibatch_y, minibatch_x, w)
+            grad = compute_gradient_mse(minibatch_y, minibatch_x, w) 
+            w = w - gamma * grad
     return w, loss
 
 
