@@ -1,6 +1,14 @@
 def sigmoid(t):
-    """apply sigmoid function on t."""
-    return 1.0 / (1 + np.exp(-t))
+    """Function to compute sigmoid.
+    Args:
+        t       (numpy array) : Matrix output of fw(x) of size N x 1.
+    Returns:
+        sigmoid (numpy array) : Matrix sigmoid of given t, with entries are elements of {0,1}.
+    """
+    
+    sigmoid = 1.0 / (1 + np.exp(-t))
+    return sigmoid
+
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
