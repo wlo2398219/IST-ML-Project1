@@ -57,8 +57,8 @@ def compute_loss_logistic_regularized(y, tx, w, lambda_):
         loss (float, scalar) : The loss/cost value of regularized logistic regression for given model w.
     """
     
-    y_hat = sigmoid(tx.dot(w))
-    loss  = (np.transpose(y)).dot(np.log(y_hat + 1e-5)) + (np.transpose(1 - y)).dot(np.log(1 - (y_hat - 1e-5)))
-    loss -= lambda_ *  np.inner(w, w)
-    loss  = np.squeeze(- loss)
-    return loss
+    y_hat            = sigmoid(tx.dot(w))
+    loss             = (np.transpose(y)).dot(np.log(y_hat + 1e-5)) + (np.transpose(1 - y)).dot(np.log(1 - (y_hat - 1e-5)))
+    regularized_loss = loss - (lambda_ * np.inner(w, w))
+    final_loss       = np.squeeze(- regularized_loss)
+    return final_loss
