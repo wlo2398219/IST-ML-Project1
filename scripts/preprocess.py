@@ -55,13 +55,14 @@ def standardize_with_power_terms(x, power, with_ones = True, impute_with = 'mean
 
     if with_sqrt:
         for i in range(x.shape[1]):
-            if all(num > 0 for num in x[:,i]):
-                x_sqrt = 1/(1+np.log(1 + x[:,i]))
-                x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
-                stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
-                x_sqrt = np.log(1 + x[:,i])
-                x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
-                stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
+            # if all(num > 0 for num in stand_x[:,i]):
+            min_ = np.min(x[:, i])
+            x_sqrt = 1/(1+np.log(1 + x[:,i] - min_))
+            x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
+            stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
+            x_sqrt = np.log(1 + x[:,i] - min_)
+            x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
+            stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
 
     x_tmp = x
     for deg in range(2, power + 1):
@@ -73,6 +74,42 @@ def standardize_with_power_terms(x, power, with_ones = True, impute_with = 'mean
 
         x_sq = (x_sq * mask - mean)/std_dev
         x_sq[~mask] = 0
+        stand_x = np.concatenate((stand_x,x_sq),axis = 1)
+
+
+    # ---------- Add ones to the matrix --------
+    if with_ones:
+        tmp = np.ones([stand_x.shape[0], stand_x.shape[1] + 1])
+        tmp[:,1:] = stand_x
+        stand_x = tmp
+
+    return stand_x
+
+
+def standardize_with_power_terms1(x, power, with_ones = True, impute_with = 'mean', with_sqrt = False):
+    
+    min_ = np.min(x, axis = 0)
+    max_ = np.max(x, axis = 0)
+    stand_x = (x - min_) / max_
+
+    if with_sqrt:
+        for i in range(x.shape[1]):
+            x_sqrt = 1 / (1 + np.log(1 + stand_x[:,i]))
+            x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
+            stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
+            x_sqrt = np.log(1 + stand_x[:,i])
+            x_sqrt = (x_sqrt - np.mean(x_sqrt))/np.std(x_sqrt)
+            stand_x = np.concatenate((stand_x,x_sqrt.reshape([x.shape[0],1])),1)
+
+    x_tmp = stand_x
+    for deg in range(2, power + 1):
+        x_tmp = x_tmp * stand_x
+        x_sq = x_tmp
+
+        min_ = np.min(x_sq, axis = 0)
+        max_ = np.max(x_sq, axis = 0)
+        x_sq = (x_sq - min_) / max_
+
         stand_x = np.concatenate((stand_x,x_sq),axis = 1)
 
 
